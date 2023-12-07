@@ -20,4 +20,5 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     username = models.CharField(max_length=50, primary_key=True)
     email = models.CharField(max_length=50, null=True)
-    
+    location = models.PointField(srid=4326, null=True, blank=True)  #  geolocation
+    location_consent = models.BooleanField(default=False) #  geolocation consent

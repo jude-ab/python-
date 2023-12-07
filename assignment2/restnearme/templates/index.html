@@ -1,97 +1,190 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Michelin Restaurants</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> 
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
-<body>
+  </head>
+  <body>
     <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <div class="text-start">
-                <a class="navbar-brand" href="#">
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'user_logout' %}" class="navbar-text text-white" >Logout</a>
-                {% endif %}
-            </div>
-            <div class="mx-auto d-md-block">
-                <a class="navbar-brand" href="#">One-star Michelin Restaurants</a>
-            </div>
+      <div class="container">
+        <div class="text-start">
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'user_logout' %}" class="navbar-text text-white"
+            >Logout</a
+          >
+          {% endif %}
         </div>
-    </nav>    
+        <div class="mx-auto d-md-block">
+          <a class="navbar-brand">One-star Michelin Restaurants</a>
+        </div>
+      </div>
+    </nav>
     <div class="row justify-content-center">
-        <div class="col-md- text-center">
-            <div id="map" class="mt-5 mb-4" style="height: 500px;"></div>
-            <p id="mapDescription">
-                This map shows the locations of all one-start Michelin restaurants.
-                <br>
-                Michel Star restaurants are awarded to restaurants that serve exceptional food, and are a symbol of fine dining quality.
-            </p>
-        </div>
+      <div class="col-md- text-center">
+        <div id="map" class="mt-5 mb-4" style="height: 500px"></div>
+        <p id="mapDescription">
+          This map shows the locations of all one-start Michelin restaurants.
+          <br />
+          Michel Star restaurants are awarded to restaurants that serve
+          exceptional food, and are a symbol of fine dining quality.
+        </p>
+      </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-6 col-sm-8 col-12 text-center"> <!-- Center align the button -->
-            <button id="getLocationButton" class="btn btn-dark btn-block">Get My Current Location!</button>
+      <div class="col-md-6 col-sm-8 col-12 text-center mb-3">
+        <button id="getLocationButton" class="btn btn-dark btn-block">
+          Get My Current Location!
+        </button>
+      </div>
+    </div>
+    <!-- Button to Show User Locations -->
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-8 col-12 text-center mt-3">
+        <button id="showUsersButton" class="btn btn-dark btn-block">
+          Show Friend's Locations
+        </button>
+      </div>
+    </div>
+
+    <!-- User List Modal -->
+    <div
+      class="modal fade"
+      id="userListModal"
+      tabindex="-1"
+      aria-labelledby="userListModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userListModalLabel">User List</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul id="userList" class="list-group"></ul>
+          </div>
         </div>
-    </div>    
+      </div>
+    </div>
+
+    <!-- JavaScript to Handle Map and User Locations -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script>
-        var map = L.map('map', { doubleClickZoom: false }).setView([53.349805, -7.261649], 6); // Center of Ireland with a zoom level of 6
-        
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+            // JavaScript to Handle Map and User Locations
+            var map = L.map('map', { doubleClickZoom: false }).setView([53.349805, -7.261649], 6); // Center of Ireland with a zoom level of 6
 
-        function onLocationFound(e) {
-            var radius = e.accuracy;
-            var latitude = e.latlng.lat;
-            var longitude = e.latlng.lng;
-            var location = latitude + ", " + longitude;
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
 
-            L.marker(e.latlng).addTo(map)
+            function onLocationFound(e) {
+              var radius = e.accuracy;
+              var latitude = e.latlng.lat;
+              var longitude = e.latlng.lng;
+              L.marker(e.latlng).addTo(map)
                 .bindPopup("Location Found at:\n\nLatitude: " + latitude + ", Longitude: " + longitude).openPopup();
+              L.circle(e.latlng, radius).addTo(map);
+            }
 
-            L.circle(e.latlng, radius).addTo(map);
-        }
+            // Location found event listener
+            map.on('locationfound', onLocationFound);
 
-        //location found event listener
-        map.on('locationfound', onLocationFound);
+            // Get Current Location button click event
+            document.getElementById('getLocationButton').addEventListener('click', function () {
+              map.locate({ setView: true, maxZoom: 30 });
+            });
 
-        //GetCurrent Location button click event
-        document.getElementById('getLocationButton').addEventListener('click', function() {
-            map.locate({ setView: true, maxZoom: 30 });
-        });
+            // Function to fetch users and populate the modal
+            function fetchUsersAndPopulateModal() {
+              fetch('/restnearme/api/users/')  // Update with your actual API endpoint
+                .then(response => response.json())
+                .then(users => {
+                  let userListEl = document.getElementById('userList');
+                  userListEl.innerHTML = '';  // Clear existing list items
+                  users.forEach(user => {
+                    let li = document.createElement('li');
+                    li.className = 'list-group-item list-group-item-action'
+                    li.style.cursor = 'pointer';
+                    li.textContent = user.username;
+                    li.addEventListener('click', function() {
+                      let userLocation = [user.location.latitude, user.location.longitude];
+                      showUserLocationOnMap(userLocation, user.username);  // Pass the username to the function
+                      $('#userListModal').modal('hide');  // Hide the modal after selection
+                    });
+                    userListEl.appendChild(li);
+                  });
+                })
+                .catch(error => console.error('Error fetching users:', error));
+            }
 
-        var m_restaurants = [
-            {% for restaurant in michelin_restaurants %}
-                {
-                    "latitude": {{ restaurant.latitude }},
-                    "longitude": {{ restaurant.longitude }},
-                    "name": "{{ restaurant.name|escapejs }}",
-                    "cuisine": "{{ restaurant.cuisine|escapejs }}",
-                    "price": "{{ restaurant.price|escapejs }}",
-                    "url": "{{ restaurant.url|escapejs }}"
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
+            // Variable to store the open popup
+            let openPopup = null;
 
-// Looping through the m_restaurants and add markers for each data point
-        m_restaurants.forEach(function(data) {
-            var popupContent = `
-                <h3>${data.name}</h3>
-                <p>Cuisine: ${data.cuisine}<br>
-                Price Range: ${data.price}<br>
-                <a href="${data.url}" target="_blank">Visit Website</a></p>
-            `;
-            L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent);
-        });
+            // Function to show user location on the map
+            function showUserLocationOnMap(location, userName) {
+              if (!location) return;
+              let [latitude, longitude] = location;
 
-        console.log(m_restaurants);
+              // Close the previously opened popup (if any)
+              if (openPopup) {
+                openPopup.closePopup();
+              }
 
+              // Add the new user marker and open its popup
+              let userMarker = L.marker([latitude, longitude]).addTo(map);
+              map.setView([latitude, longitude], 10); // Set the map view to the user's location
+              openPopup = userMarker.bindPopup(`${userName}'s Location`).openPopup(); // Display user's name in popup
+            }
+
+            // Event listener for the 'Show User Locations' button
+            document.getElementById('showUsersButton').addEventListener('click', function() {
+              fetchUsersAndPopulateModal();
+              $('#userListModal').modal('show');  // Using jQuery to show the modal
+            });
+
+
+      // Existing code to handle restaurant markers
+            var m_restaurants = [
+                {% for restaurant in michelin_restaurants %}
+                    {
+                        "latitude": {{ restaurant.latitude }},
+                        "longitude": {{ restaurant.longitude }},
+                        "name": "{{ restaurant.name|escapejs }}",
+                        "cuisine": "{{ restaurant.cuisine|escapejs }}",
+                        "price": "{{ restaurant.price|escapejs }}",
+                        "url": "{{ restaurant.url|escapejs }}"
+                    }{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ];
+
+                m_restaurants.forEach(function (data) {
+                    var popupContent = `
+                        <h3>${data.name}</h3>
+                        <p>Cuisine: ${data.cuisine}<br>
+                        Price Range: ${data.price}<br>
+                        <a href="${data.url}" target="_blank">Visit Website</a></p>
+                        `;
+                    L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent);
+                });
     </script>
-</body>
+  </body>
 </html>
