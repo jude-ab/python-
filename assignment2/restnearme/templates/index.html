@@ -289,13 +289,6 @@
               restaurant.name?.toLowerCase().includes(searchTerm)
           );
 
-          // // Clear existing markers
-          // map.eachLayer(layer => {
-          //     if (!!layer.toGeoJSON) { // Check if layer is a marker
-          //         map.removeLayer(layer);
-          //     }
-          // });
-
           // Add markers for searched restaurants
           searchedRestaurants.forEach(data => {
               var popupContent = `
@@ -321,33 +314,6 @@
           searchRestaurants();
           closeSideDrawer(); // Close the side drawer after search
       });
-
-      // Function to fetch restaurant locations and update the map
-      // function reloadLocationsFromDatabase() {
-      //     fetch('/restnearme/map/')  // Update with your actual API endpoint for restaurants
-      //         .then(response => response.json())
-      //         .then(restaurants => {
-      //             // Clear existing markers
-      //             map.eachLayer(layer => {
-      //                 if (!!layer.toGeoJSON) { // Check if layer is a marker
-      //                     map.removeLayer(layer);
-      //                 }
-      //             });
-
-      //             // Add markers for fetched restaurants
-      //             restaurants.forEach(data => {
-      //                 var popupContent = `
-      //                     <h3>${data.name}</h3>
-      //                     <p>Cuisine: ${data.cuisine}<br>
-      //                     City: ${data.city}<br>
-      //                     Price Range: ${data.price}<br>
-      //                     <a href="${data.url}" target="_blank">Visit Website</a></p>
-      //                 `;
-      //                 L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent);
-      //             });
-      //         })
-      //         .catch(error => console.error('Error fetching restaurants:', error));
-      // }
 
       // Event listener for the 'Reload Locations from Database' button
       document.getElementById('reloadLocationsButton').addEventListener('click', function() {

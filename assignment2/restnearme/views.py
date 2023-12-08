@@ -8,8 +8,6 @@ from .models import UserProfile
 from django.contrib.gis.geos import Point
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-import json
-from django.http import JsonResponse
 
 def map_view(request):
         michelin_restaurants = MichelinRestaurants.objects.all()
