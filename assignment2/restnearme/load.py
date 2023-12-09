@@ -2,13 +2,13 @@ from pathlib import Path
 from django.contrib.gis.utils import LayerMapping
 from .models import MichelinRestaurants
 
-# Define the field mappings based on the shapefile's attributes
+# Defined the field mappings based on the shapefile's attributes
 michelin_restaurants = {
     'name': 'name',           # Field 'name' in the shapefile
     'latitude': 'latitude',   # Field 'latitude' in the shapefile
     'longitude': 'longitude', # Field 'longitude' in the shapefile
     'city': 'city',           # Field 'city' in the shapefile
-    'location': 'Point',
+    'location': 'Point',      # Field 'location' in the shapefile
     'region': 'region',       # Field 'region' in the shapefile
     'cuisine': 'cuisine',     # Field 'cuisine' in the shapefile
     'price': 'price',         # Field 'price' in the shapefile
@@ -18,6 +18,8 @@ michelin_restaurants = {
 # Path to the shapefile
 michelin_restaurants_shp = Path(__file__).resolve().parent / 'data' / 'one-star-michelin-restaurants.shp'
 
+# Load the shapefile into the model
 def run(verbose=True):
     lm = LayerMapping(MichelinRestaurants, michelin_restaurants_shp, michelin_restaurants, transform=False, encoding='utf-8')
     lm.save(strict=True, verbose=verbose)
+

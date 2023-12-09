@@ -1,10 +1,11 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 
+# Created model for Michelin restaurants
 class MichelinRestaurants(models.Model):
     city = models.CharField(max_length=100, null=True, default='Unknown')
-    latitude = models.FloatField()  # Changed from CharField to FloatField
-    longitude = models.FloatField()  # Changed from CharField to FloatField
+    latitude = models.FloatField()  
+    longitude = models.FloatField()  
     location = models.PointField(srid=4326)
     name = models.CharField(max_length=100)
     region = models.CharField(max_length=100, default='Unknown')
@@ -15,7 +16,7 @@ class MichelinRestaurants(models.Model):
     def __str__(self):
         return self.region
 
-# Extending in-built user model with one-to-one relationship
+# user model with one-to-one relationship
 class UserProfile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     username = models.CharField(max_length=50, primary_key=True)

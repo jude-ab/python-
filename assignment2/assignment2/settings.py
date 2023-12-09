@@ -31,17 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-     'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'pwa',
+    'pwa',
     'django.contrib.gis',
     'django.contrib.gis.db',
     'restnearme',
-    # 'rest_framework',
     'leaflet',
 ]
 
@@ -82,11 +81,11 @@ WSGI_APPLICATION = 'assignment2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gis',             # Make sure this is the correct database name you have set up
+        'NAME': 'gis',            
         'USER': 'docker',
         'PASSWORD': 'docker',
-        'HOST': 'localhost',    # Using the network alias
-        'PORT': '25432',
+        'HOST': 'localhost',  
+        'PORT': '5432',
     }
 }
 

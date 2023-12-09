@@ -41,13 +41,6 @@
         </div>
       </div>
     </nav>
-    <!-- <div class="row justify-content-center">
-      <div class="col-md-6 col-sm-8 col-12 text-center mt-3">
-        <button id="reloadLocationsButton" class="btn btn-dark btn-block">
-          Reload
-        </button>
-      </div>
-    </div> -->
     <div class="row justify-content-center">
       <div class="col-md- text-center">
         <div id="map" class="mt-5 mb-4" style="height: 500px"></div>
@@ -138,7 +131,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
     <script>
-      // JavaScript to Handle Map and User Locations
+      // Initialize the map
       var map = L.map('map', { doubleClickZoom: false }).setView([53.349805, -7.261649], 6); // Center of Ireland with a zoom level of 6
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -177,6 +170,7 @@
           marker.openPopup();
       }
 
+      // Function to reload locations from the database
       function onLocationFound(e) {
           var radius = e.accuracy;
           var latitude = e.latlng.lat;
@@ -203,55 +197,55 @@
       });
 
       // Function to fetch users and populate the modal
-      function fetchUsersAndPopulateModal() {
+      function fetchUsersAndPopModal() {
           fetch('/restnearme/api/users/')  // Update with your actual API endpoint
               .then(response => response.json())
               .then(users => {
                   let userListEl = document.getElementById('userList');
                   userListEl.innerHTML = '';  // Clear existing list items
                   users.forEach(user => {
-                      let li = document.createElement('li');
+                      let li = document.createElement('li'); // Create a new list item
                       li.className = 'list-group-item list-group-item-action'
                       li.style.cursor = 'pointer';
                       li.textContent = user.username;
                       li.addEventListener('click', function() {
                           let userLocation = [user.location.latitude, user.location.longitude];
-                          showUserLocationOnMap(userLocation, user.username);  // Pass the username to the function
+                          showUserLocation(userLocation, user.username);  // Pass the username to the function
                           $('#userListModal').modal('hide');  // Hide the modal after selection
                       });
-                      userListEl.appendChild(li);
+                      userListEl.appendChild(li); // Add the list item to the list
                   });
               })
               .catch(error => console.error('Error fetching users:', error));
       }
 
-      // Variable to store the open popup
+      //variable to store the open popup
       let openPopup = null;
 
       // Function to show user location on the map
-      function showUserLocationOnMap(location, userName) {
+      function showUserLocation(location, userName) {
           if (!location) return;
           let [latitude, longitude] = location;
 
-          // Close the previously opened popup (if any)
+          //close the previously opened popup
           if (openPopup) {
               openPopup.closePopup();
           }
 
-          // Add the new user marker and open its popup
+          //add the new user marker and open its popup
           let userMarker = L.marker([latitude, longitude]).addTo(map);
           map.setView([latitude, longitude], 10); // Set the map view to the user's location
           openPopup = userMarker.bindPopup(`${userName}'s Location`).openPopup(); // Display user's name in popup
       }
 
-      // Event listener for the 'Show User Locations' button
+      //event listener for the 'Show User Locations' button
       document.getElementById('showUsersButton').addEventListener('click', function() {
-          fetchUsersAndPopulateModal();
+          fetchUsersAndPopModal();
           $('#userListModal').modal('show');  // Using jQuery to show the modal
           closeSideDrawer();
       });
 
-      // Existing code to handle restaurant markers
+      //code to handle restaurant markers
       var m_restaurants = [
           {% for restaurant in michelin_restaurants %}
           {
@@ -265,6 +259,7 @@
           {% endfor %}
       ];
 
+      //add markers for all restaurants
       m_restaurants.forEach(function (data) {
           var popupContent = `
               <h3>${data.name}</h3>
@@ -276,20 +271,20 @@
                   <p>Loading weather information...</p>
               </div>
           `;
-          var marker = L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent);
+          var marker = L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent); // Add a marker for each restaurant
 
           // Add a click event listener to each marker
           marker.on('click', onMarkerClick);
       });
 
-      // Function to search restaurants and update the map
+      //function to search restaurants and update the map
       function searchRestaurants() {
           let searchTerm = document.getElementById('searchInput').value.toLowerCase();
           let searchedRestaurants = m_restaurants.filter(restaurant =>
               restaurant.name?.toLowerCase().includes(searchTerm)
           );
 
-          // Add markers for searched restaurants
+          //add markers for searched restaurants
           searchedRestaurants.forEach(data => {
               var popupContent = `
                   <h3>${data.name}</h3>
@@ -298,14 +293,14 @@
                   Price Range: ${data.price}<br>
                   <a href="${data.url}" target="_blank">Visit Website</a></p>
               `;
-              L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent);
+              L.marker([data.latitude, data.longitude]).addTo(map).bindPopup(popupContent); // Add a marker for each restaurant
           });
 
           // If there are results, pan to the first result
           if (searchedRestaurants.length > 0) {
               map.setView([searchedRestaurants[0].latitude, searchedRestaurants[0].longitude], 13);
           } else {
-              alert('No restaurants found with that search term.');
+              alert('No restaurants found.');
           }
       }
 
@@ -313,12 +308,6 @@
       document.getElementById('searchButton').addEventListener('click', function() {
           searchRestaurants();
           closeSideDrawer(); // Close the side drawer after search
-      });
-
-      // Event listener for the 'Reload Locations from Database' button
-      document.getElementById('reloadLocationsButton').addEventListener('click', function() {
-          // reloadLocationsFromDatabase();
-          closeSideDrawer(); // Close the side drawer after reloading
       });
     </script>
   </body>
