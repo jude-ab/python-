@@ -1,0 +1,99 @@
+<!-- Navigation Bar -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <div class="text-start">
+           {% if request.user.is_authenticated %}
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDrawer" aria-controls="offcanvasDrawer">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a href="{% url 'user_logout' %}" class="navbar-text text-white">Logout</a>
+            {% endif %}
+        </div>
+        <div class="mx-auto d-md-block">
+            <a class="navbar-brand">One-star Michelin Restaurants</a>
+        </div>
+    </div>
+</nav>
+<!-- Offcanvas for Sidebar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasDrawer" aria-labelledby="offcanvasDrawerLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasDrawerLabel">Michelin Restaurants</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+         <!-- search bar-->
+       <div class="row justify-content-center my-4">
+    <div class="col-12 text-center">
+        <!-- Input group with an append -->
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Name..." aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-dark" type="button" id="button-addon2">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Full-width buttons using utility classes -->
+<div class="row justify-content-center my-4">
+  <div class="col-12 text-center">
+    <button id="getLocationButton" class="btn btn-dark w-100">
+      Get My Current Location!
+    </button>
+  </div>
+</div>
+
+<div class="row justify-content-center my-2">
+  <div class="col-12 text-center">
+    <button id="showUsersButton" class="btn btn-dark w-100">
+      Show Friend's Locations
+    </button>
+  </div>
+</div>
+</div>
+</div>
+<!-- User List Modal -->
+<div class="modal fade" id="userListModal" tabindex="-1" aria-labelledby="userListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userListModalLabel">User List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="userList" class="list-group">
+                    <script>
+        //Function to fetch users from the API and populate the modal
+      function fetchUsersAndPopModal() {
+          fetch('/restnearme/api/users/')  // Update with your actual API endpoint
+              .then(response => response.json())
+              .then(users => {
+                  let userListEl = document.getElementById('userList');
+                  userListEl.innerHTML = '';  // Clear existing list items
+                  users.forEach(user => {
+                      let li = document.createElement('li'); // Create a new list item
+                      li.className = 'list-group-item list-group-item-action'
+                      li.style.cursor = 'pointer';
+                      li.textContent = user.username;
+                      li.addEventListener('click', function() {
+                          let userLocation = [user.location.latitude, user.location.longitude];
+                          showUserLocation(userLocation, user.username);  // Pass the username to the function
+                          $('#userListModal').modal('hide');  // Hide the modal after selection
+                      });
+                      userListEl.appendChild(li); // Add the list item to the list
+                  });
+              })
+              .catch(error => console.error('Error fetching users:', error));
+      }
+
+   //event listener for the 'Show User Locations' button 
+      document.getElementById('showUsersButton').addEventListener('click', function() {
+          fetchUsersAndPopModal();
+          $('#userListModal').modal('show');  // Using jQuery to show the modal
+          closeSideDrawer();
+      });
+      </script>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

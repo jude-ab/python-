@@ -20,6 +20,7 @@ from restnearme.views import user_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('restnearme/', include('restnearme.urls')),
+    path('restnearme/', include('restnearme.urls')),
+   # path('', include('pwa.urls')),
     path('', user_login, name='user_login'),  
 ]
