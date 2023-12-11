@@ -27,7 +27,7 @@
         <!-- Input group with an append -->
         <div class="input-group mb-3">
             <input type="text" id="searchInput" class="form-control" placeholder="Search Name..." aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-dark" type="button" id="button-addon2">
+            <button class="btn btn-dark" type="button" id="searchButton">
                 <i class="bi bi-search"></i>
             </button>
         </div>
@@ -85,11 +85,10 @@
               .catch(error => console.error('Error fetching users:', error));
       }
 
-   //event listener for the 'Show User Locations' button 
-      document.getElementById('showUsersButton').addEventListener('click', function() {
-          fetchUsersAndPopModal();
-          $('#userListModal').modal('show');  // Using jQuery to show the modal
-          closeSideDrawer();
+       // Event listener for the search button
+      document.getElementById('searchButton').addEventListener('click', function() {
+          searchRestaurants();
+          closeSideDrawer(); // Close the side drawer after search
       });
       </script>
                 </ul>

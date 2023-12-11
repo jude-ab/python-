@@ -77,12 +77,6 @@
           offcanvasInstance.hide();
       }
 
-      // Get Current Location button click event
-      document.getElementById('getLocationButton').addEventListener('click', function () {
-          map.locate({ setView: true, maxZoom: 30 });
-          closeSideDrawer();
-      });
-
       //variable to store the open popup
       let openPopup = null;
 
@@ -166,6 +160,20 @@
           searchRestaurants();
           closeSideDrawer(); // Close the side drawer after search
       });
+
+       //event listener for the 'Show User Locations' button 
+      document.getElementById('showUsersButton').addEventListener('click', function() {
+          fetchUsersAndPopModal();
+          $('#userListModal').modal('show');  // Using jQuery to show the modal
+          closeSideDrawer();
+      });
+
+       // Get Current Location button click event
+      document.getElementById('getLocationButton').addEventListener('click', function () {
+          map.locate({ setView: true, maxZoom: 30 });
+          closeSideDrawer();
+      });
+
     </script>
     {% endblock %}
   </body>
