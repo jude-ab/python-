@@ -4,35 +4,31 @@
 # Start from an existing image with Miniconda installed
 FROM continuumio/miniconda3
 
-LABEL maintainer = "Jude Abouhajar"
+LABEL maintainer="Jude Abouhajar"
 
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE=assignment2.settings
 
 # Ensure that everything is up-to-date
 RUN apt-get -y update && apt-get -y upgrade
-# RUN apt-get install -y nginx
-
 RUN conda update -n base conda && conda update -n base --all
 
-# Make a working directory in the image and set it as working dir.
+# Make a working directory in the image and set it as the working dir.
 RUN mkdir -p /usr/src/app
-#RUN mkdir -p /var/log/pgadmin && chown -R 501:20 /var/log/pgadmin
 WORKDIR /usr/src/app
 
-# Get the following libraries. We can install them "globally" on the image as it will contain only our project
-#RUN apt-get -y install build-essential python-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
-
-# You should have already exported your conda environment toan "ENV.yml" file.
-# Now copy this to the image and install everything in it. Make sure to install uwsgi - it may not be in the source
-# environment.
+# Copy environment file and create Conda environment
 COPY ENV.yml /usr/src/app
 RUN conda env create -n DjangoEnv --file ENV.yml
 
-# Make RUN commands use the new environment
-# See https://pythonspeed.com/articles/activate-conda-dockerfile/ for explanation
+# Activate Conda environment
 RUN echo "source activate DjangoEnv" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
+
+# RUN conda init
+# RUN conda activate DjangoEnv
+
+RUN python -m pip install django-pwa==1.1.0
 
 # Set up conda to match our test environment
 RUN conda config --add channels conda-forge && conda config --set channel_priority strict
@@ -43,6 +39,7 @@ RUN conda install uwsgi
 COPY . /usr/src/app
 
 # Make sure that static files are up to date and available
+RUN pip install django-crispy-forms
 RUN python manage.py collectstatic --no-input
 
 # Expose port 8001 on the image. We'll map a localhost port to this later.
@@ -51,3 +48,8 @@ EXPOSE 8001
 # Run "uwsgi". uWSGI is a Web Server Gateway Interface (WSGI) server implementation that is typically used to run Python
 # web applications.
 CMD uwsgi --ini uwsgi.ini
+
+
+
+
+

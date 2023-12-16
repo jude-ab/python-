@@ -16,7 +16,7 @@ import socket
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'restnearme/static/js', 'serviceworker.js')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure--zcqc&uhh_-d)2ujct7l4+-)*ww+&hfby&#8)mr#%8n+g8&^wz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['michelinrestaurants.site', '16.171.71.251', 'localhost', 'deployed_awm', '172.18.0.5']
 
 # Application definition
 
@@ -61,7 +60,7 @@ ROOT_URLCONF = 'assignment2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,7 +85,7 @@ DATABASES = {
         'NAME': 'gis',            
         'USER': 'docker',
         'PASSWORD': 'docker',
-        'HOST': 'map_postgis',  
+        'HOST': 'wmap_postgis',  
         'PORT': '5432',
     }
 }
@@ -124,22 +123,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Image)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-import os
-STATIC_URL = 'static/'
+
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 class docker_config:
     POSTGIS_PORT = '5432'  
     DEPLOY_SECURE = False
-    awm_project = 'awm_project'
+    assignment2 = 'assignment2'
 
 if socket.gethostname() == "judes-Air":
     DATABASES["default"]["HOST"] = "localhost"
     DATABASES["default"]["PORT"] = 25432
     DEPLOY_SECURE = False
 else:
-    DATABASES["default"]["HOST"] = "map_postgis"
+    DATABASES["default"]["HOST"] = "wmap_postgis"
     DATABASES["default"]["PORT"] = 5432
     DATABASES["default"]["USER"] = "docker"
     DATABASES["default"]["PASSWORD"] = "docker"
@@ -150,7 +149,7 @@ if DEPLOY_SECURE:
     DEBUG = False
     TEMPLATES[0]["OPTIONS"]["debug"] = False
     # ALLOWED_HOSTS = ['.your-domain-name.xyz', 'localhost',]
-    ALLOWED_HOSTS = ['swiper.ltd', '13.50.99.33', ]  # Update this line
+   # ALLOWED_HOSTS = ['michelinrestaurants.online', '16.16.126.78', 'localhost', 'deployed_awm', '172.19.0.5']
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
 else:

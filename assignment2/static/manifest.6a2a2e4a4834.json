@@ -1,0 +1,20 @@
+{
+  "name": "Michelin Restaurants Near Me",
+  "short_name": "RestaurantsNearMe PWA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "an application that displays locations of one star Michelin Restaurants around the world, as well as allowing the user to find the location of other users who have consented to do so. this app also allows users to search for a restaurant, and to view the current weather of the restaurant's location, and lastly to get the user's current location to be able to navigate their way to the closest restaurant.",
+  "icons": [
+    {
+      "src": "static/image/restaurant-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "static/image/restaurant-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

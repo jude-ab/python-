@@ -1,4 +1,6 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
+importScripts(
+  "https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js"
+);
 
 // Check if Workbox loaded successfully
 if (workbox) {
@@ -9,17 +11,18 @@ if (workbox) {
 
   // Cache CSS and JavaScript files
   workbox.routing.registerRoute(
-    ({ request }) => request.destination === 'style' || request.destination === 'script',
+    ({ request }) =>
+      request.destination === "style" || request.destination === "script",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'static-resources',
+      cacheName: "static-resources",
     })
   );
 
   // Cache images from Google APIs
   workbox.routing.registerRoute(
-    new RegExp('https://www.googleapis.com/'),
+    new RegExp("https://www.googleapis.com/"),
     new workbox.strategies.NetworkFirst({
-      cacheName: 'api-cache',
+      cacheName: "api-cache",
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 50,
@@ -31,9 +34,9 @@ if (workbox) {
 
   // Cache image files with a cache-first strategy for 30 days.
   workbox.routing.registerRoute(
-    ({request}) => request.destination === 'image',
+    ({ request }) => request.destination === "image",
     new workbox.strategies.CacheFirst({
-      cacheName: 'image-cache',
+      cacheName: "image-cache",
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 60,
@@ -42,7 +45,6 @@ if (workbox) {
       ],
     })
   );
-
 } else {
   console.log(`Boo! Workbox didn't load 😬`);
 }
