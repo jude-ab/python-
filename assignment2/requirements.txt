@@ -1,0 +1,21 @@
+asgiref @ file:///home/conda/feedstock_root/build_artifacts/asgiref_1685243452975/work
+backports.zoneinfo @ file:///Users/runner/miniforge3/conda-bld/backports.zoneinfo_1695531389835/work
+certifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1700303426725/work/certifi
+dj-database-url==2.1.0
+Django @ file:///home/conda/feedstock_root/build_artifacts/django_1701689956975/work
+django-environ==0.11.2
+django-leaflet @ file:///home/conda/feedstock_root/build_artifacts/django-leaflet_1683033742276/work
+django-pwa==1.1.0
+djangorestframework==3.14.0
+GDAL==3.4.3
+geographiclib @ file:///home/conda/feedstock_root/build_artifacts/geographiclib_1624386157733/work
+geopy @ file:///home/conda/feedstock_root/build_artifacts/geopy_1700784427509/work
+gunicorn==21.2.0
+numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1687808433287/work
+packaging==23.2
+psycopg2==2.9.9
+pyproj @ file:///Users/runner/miniforge3/conda-bld/pyproj_1670929707828/work
+pytz==2023.3.post1
+sqlparse @ file:///home/conda/feedstock_root/build_artifacts/sqlparse_1681817562700/work
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1695040754690/work
+whitenoise @ file:///home/conda/feedstock_root/build_artifacts/whitenoise_1697025952449/work
