@@ -13,16 +13,16 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import socket
-import environ
-import dj_database_url
+# import environ
+# import dj_database_url
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'restnearme/static/js', 'serviceworker.js')
 
-env = environ.Env()
-environ.Env.read_env()
-print(env('DATABASE_URL'))
+# env = environ.Env()
+# environ.Env.read_env()
+# print(env('DATABASE_URL'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure--zcqc&uhh_-d)2ujct7l4+-)*ww+&hfby&#8)mr#%8n+g8&^wz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = ['michelinrestaurants.site', '16.171.71.251', 'localhost', 'deployed_awm', '172.18.0.5']
+#ALLOWED_HOSTS = ['michelinrestaurants.site', '16.171.71.251', 'localhost', 'deployed_awm', '172.18.0.5']
 
 ALLOWED_HOSTS = ['*']
 
@@ -87,20 +87,21 @@ WSGI_APPLICATION = 'assignment2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'gis',            
-#         'USER': 'docker',
-#         'PASSWORD': 'docker',
-#         'HOST': 'wmap_postgis',  
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'), engine='django.contrib.gis.db.backends.postgis')
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'gis',            
+        'USER': 'docker',
+        'PASSWORD': 'docker',
+        # 'HOST': 'wmap_postgis',  
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse(env('DATABASE_URL'), engine='django.contrib.gis.db.backends.postgis')
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
