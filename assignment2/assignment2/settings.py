@@ -31,7 +31,7 @@ PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'restnearme/static/js', 'servic
 SECRET_KEY = 'django-insecure--zcqc&uhh_-d)2ujct7l4+-)*ww+&hfby&#8)mr#%8n+g8&^wz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 #ALLOWED_HOSTS = ['michelinrestaurants.site', '16.171.71.251', 'localhost', 'deployed_awm', '172.18.0.5']
 
@@ -90,11 +90,10 @@ WSGI_APPLICATION = 'assignment2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gis',            
+        'NAME': 'giscourse',            
         'USER': 'docker',
-        'PASSWORD': 'docker',
-        # 'HOST': 'wmap_postgis',  
-        'HOST': 'localhost',
+        'PASSWORD': 'qwerty2023',
+        'HOST': 'gis.c5cxvn3vbece.eu-north-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -223,3 +222,13 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
+
+AWS_ACCESS_KEY_ID = 'AKIASABIDDC3YHNMJMCD '
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'giscourse'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'eu-north-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERITY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

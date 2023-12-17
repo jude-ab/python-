@@ -3,10 +3,10 @@
     <div class="container">
         <div class="text-start">
            {% if request.user.is_authenticated %}
-            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDrawer" aria-controls="offcanvasDrawer">
+            <button class="btn ms-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDrawer" aria-controls="offcanvasDrawer">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a href="{% url 'user_logout' %}" class="navbar-text text-white">Logout</a>
+            <a href="{% url 'user_logout' %}" class="navbar-text text-white ms-0">Logout</a>
             {% endif %}
         </div>
         <div class="mx-auto d-md-block">
