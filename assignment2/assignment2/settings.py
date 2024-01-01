@@ -13,16 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import socket
-# import environ
-# import dj_database_url
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'restnearme/static/js', 'serviceworker.js')
-
-# env = environ.Env()
-# environ.Env.read_env()
-# print(env('DATABASE_URL'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -31,9 +25,7 @@ PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'restnearme/static/js', 'servic
 SECRET_KEY = 'django-insecure--zcqc&uhh_-d)2ujct7l4+-)*ww+&hfby&#8)mr#%8n+g8&^wz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-#ALLOWED_HOSTS = ['michelinrestaurants.site', '16.171.71.251', 'localhost', 'deployed_awm', '172.18.0.5']
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'whitenoise.runserver_nostatic',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -92,17 +83,13 @@ WSGI_APPLICATION = 'assignment2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'giscourse',            
+        'NAME': 'gis',            
         'USER': 'docker',
-        'PASSWORD': 'qwerty2023',
-        'HOST': 'gis.c5cxvn3vbece.eu-north-1.rds.amazonaws.com',
+        'PASSWORD': 'docker',
+        'HOST': 'wmap_postgis',  
         'PORT': '5432',
     }
 }
-
-# DATABASES = {
-#     'default': dj_database_url.parse(env('DATABASE_URL'), engine='django.contrib.gis.db.backends.postgis')
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -122,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -141,43 +127,43 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# class docker_config:
-#     POSTGIS_PORT = '5432'  
-#     DEPLOY_SECURE = False
-#     assignment2 = 'assignment2'
+class docker_config:
+    POSTGIS_PORT = '5432'  
+    DEPLOY_SECURE = False
+    assignment2 = 'assignment2'
 
-# if socket.gethostname() == "judes-Air":
-#     DATABASES["default"]["HOST"] = "localhost"
-#     DATABASES["default"]["PORT"] = 25432
-#     DEPLOY_SECURE = False
-# else:
-#     DATABASES["default"]["HOST"] = "wmap_postgis"
-#     DATABASES["default"]["PORT"] = 5432
-#     DATABASES["default"]["USER"] = "docker"
-#     DATABASES["default"]["PASSWORD"] = "docker"
-#     DEPLOY_SECURE = True
+if socket.gethostname() == "judes-Air":
+    DATABASES["default"]["HOST"] = "localhost"
+    DATABASES["default"]["PORT"] = 25432
+    DEPLOY_SECURE = False
+else:
+    DATABASES["default"]["HOST"] = "wmap_postgis"
+    DATABASES["default"]["PORT"] = 5432
+    DATABASES["default"]["USER"] = "docker"
+    DATABASES["default"]["PASSWORD"] = "docker"
+    DEPLOY_SECURE = True
 
-#     # Set DEPLOY_SECURE to True only for LIVE deployment
-# if DEPLOY_SECURE:
-#     DEBUG = False
-#     TEMPLATES[0]["OPTIONS"]["debug"] = False
-#     # ALLOWED_HOSTS = ['.your-domain-name.xyz', 'localhost',]
-#    # ALLOWED_HOSTS = ['michelinrestaurants.online', '16.16.126.78', 'localhost', 'deployed_awm', '172.19.0.5']
-#     CSRF_COOKIE_SECURE = True
-#     SESSION_COOKIE_SECURE = True
-# else:
-#     DEBUG = True
-#     TEMPLATES[0]["OPTIONS"]["debug"] = True
-#     ALLOWED_HOSTS = ['*', ]
-#     CSRF_COOKIE_SECURE = False
-#     SESSION_COOKIE_SECURE = False
+    # Set DEPLOY_SECURE to True only for LIVE deployment
+if DEPLOY_SECURE:
+    DEBUG = False
+    TEMPLATES[0]["OPTIONS"]["debug"] = False
+    # ALLOWED_HOSTS = ['.your-domain-name.xyz', 'localhost',]
+    ALLOWED_HOSTS = ['michelinrestaurants.site', '16.16.192.28', 'localhost', 'deployed_awm', '172.18.0.5']
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+else:
+    DEBUG = True
+    TEMPLATES[0]["OPTIONS"]["debug"] = True
+    ALLOWED_HOSTS = ['*', ]
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
 
-# SECURE_HSTS_SECONDS = 31536000  # 1 year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
-# SECURE_SSL_REDIRECT = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (53.0, -8.0),
@@ -224,13 +210,3 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'en-US'
-
-AWS_ACCESS_KEY_ID = 'AKIASABIDDC3YHNMJMCD '
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'giscourse'
-AWS_S3_SIGNATURE_NAME = 's3v4',
-AWS_S3_REGION_NAME = 'eu-north-1'
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL =  None
-AWS_S3_VERITY = True
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

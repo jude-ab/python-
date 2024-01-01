@@ -9,30 +9,39 @@ if (workbox) {
   // Precache items
   workbox.precaching.precacheAndRoute([]);
 
-  // Cache CSS and JavaScript files
+  // Cache CSS files with a stale-while-revalidate strategy
   workbox.routing.registerRoute(
-    ({ request }) =>
-      request.destination === "style" || request.destination === "script",
+    ({ request }) => request.destination === "style",
     new workbox.strategies.StaleWhileRevalidate({
-      cacheName: "static-resources",
-    })
-  );
-
-  // Cache images from Google APIs
-  workbox.routing.registerRoute(
-    new RegExp("https://www.googleapis.com/"),
-    new workbox.strategies.NetworkFirst({
-      cacheName: "api-cache",
+      cacheName: 'css-cache',
       plugins: [
-        new workbox.expiration.ExpirationPlugin({
-          maxEntries: 50,
-          maxAgeSeconds: 60 * 60 * 24, // 1 day
+        new workbox.cacheableResponse.CacheableResponsePlugin({
+          statuses: [0, 200],
         }),
       ],
     })
   );
 
-  // Cache image files with a cache-first strategy for 30 days.
+  // Cache responses from the Google APIs with a network-first strategy
+  workbox.routing.registerRoute(
+    ({ url }) => url.origin === 'https://www.googleapis.com',
+    new workbox.strategies.NetworkFirst({
+      networkTimeoutSeconds: 3,
+      cacheName: "api-cache",
+      plugins: [
+        new workbox.expiration.ExpirationPlugin({
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24, // 1 day
+          purgeOnQuotaError: true,
+        }),
+        new workbox.cacheableResponse.CacheableResponsePlugin({
+          statuses: [0, 200],
+        }),
+      ],
+    })
+  );
+
+  // Cache image files with a cache-first strategy for 30 days
   workbox.routing.registerRoute(
     ({ request }) => request.destination === "image",
     new workbox.strategies.CacheFirst({
